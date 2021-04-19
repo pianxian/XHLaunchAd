@@ -188,14 +188,14 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
 }
 
 -(void)setupLaunchAdEnterForeground{
-    NSDate *didEntergroundDate = [NSDate date];
-    NSTimeInterval enterForegroundInterval = [didEntergroundDate timeIntervalSince1970];
-    NSTimeInterval didEntergroundInterval = [[[NSUserDefaults standardUserDefaults] objectForKey:kEntergroundTimeKey] floatValue];
-    if (enterForegroundInterval - didEntergroundInterval < _imageAdConfiguration.showEnterForegroundTime)return;
+
     switch (_launchAdType) {
         case XHLaunchAdTypeImage:{
             if(!_imageAdConfiguration.showEnterForeground || _detailPageShowing) return;
-    
+            NSDate *didEntergroundDate = [NSDate date];
+            NSTimeInterval enterForegroundInterval = [didEntergroundDate timeIntervalSince1970];
+            NSTimeInterval didEntergroundInterval = [[[NSUserDefaults standardUserDefaults] objectForKey:kEntergroundTimeKey] floatValue];
+            if (enterForegroundInterval - didEntergroundInterval < _imageAdConfiguration.showEnterForegroundTime)return;
             [self setupLaunchAd];
             [self setupImageAdForConfiguration:_imageAdConfiguration];
         }
@@ -203,7 +203,10 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
         case XHLaunchAdTypeVideo:{
             if(!_videoAdConfiguration.showEnterForeground || _detailPageShowing) return;
        
-            
+            NSDate *didEntergroundDate = [NSDate date];
+            NSTimeInterval enterForegroundInterval = [didEntergroundDate timeIntervalSince1970];
+            NSTimeInterval didEntergroundInterval = [[[NSUserDefaults standardUserDefaults] objectForKey:kEntergroundTimeKey] floatValue];
+            if (enterForegroundInterval - didEntergroundInterval < _videoAdConfiguration.showEnterForegroundTime)return;
       
             [self setupLaunchAd];
             [self setupVideoAdForConfiguration:_videoAdConfiguration];
