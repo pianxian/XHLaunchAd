@@ -19,6 +19,8 @@
     #import "FLAnimatedImage.h"
 #endif
 
+#define kEntergroundTimeKey @"kEntergroundTimeKey"
+
 typedef NS_ENUM(NSInteger, XHLaunchAdType) {
     XHLaunchAdTypeImage,
     XHLaunchAdTypeVideo
@@ -186,15 +188,23 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
 }
 
 -(void)setupLaunchAdEnterForeground{
+    NSDate *didEntergroundDate = [NSDate date];
+    NSTimeInterval enterForegroundInterval = [didEntergroundDate timeIntervalSince1970];
+    NSTimeInterval didEntergroundInterval = [[[NSUserDefaults standardUserDefaults] objectForKey:kEntergroundTimeKey] floatValue];
+    if (enterForegroundInterval - didEntergroundInterval < _imageAdConfiguration.showEnterForegroundTime)return;
     switch (_launchAdType) {
         case XHLaunchAdTypeImage:{
             if(!_imageAdConfiguration.showEnterForeground || _detailPageShowing) return;
+    
             [self setupLaunchAd];
             [self setupImageAdForConfiguration:_imageAdConfiguration];
         }
             break;
         case XHLaunchAdTypeVideo:{
             if(!_videoAdConfiguration.showEnterForeground || _detailPageShowing) return;
+       
+            
+      
             [self setupLaunchAd];
             [self setupVideoAdForConfiguration:_videoAdConfiguration];
         }
@@ -612,6 +622,12 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
     }];
 }
 -(void)removeOnly{
+    
+    NSDate *didEntergroundDate = [NSDate date];
+    NSTimeInterval entergroundTimeIntervel = [didEntergroundDate timeIntervalSince1970];
+    [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithFloat:entergroundTimeIntervel] forKey:kEntergroundTimeKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     DISPATCH_SOURCE_CANCEL_SAFE(_waitDataTimer)
     DISPATCH_SOURCE_CANCEL_SAFE(_skipTimer)
     REMOVE_FROM_SUPERVIEW_SAFE(_skipButton)

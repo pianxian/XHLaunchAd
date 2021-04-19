@@ -56,6 +56,12 @@ typedef NS_ENUM(NSInteger , ShowFinishAnimate) {
 /** 程序从后台恢复时,是否需要展示广告(defailt NO) */
 @property (nonatomic,assign) BOOL showEnterForeground;
 
+
+/// 程序从后台恢复 时间和切换到后台的时间间隔
+@property (nonatomic,assign) NSTimeInterval showEnterForegroundTime;
+
+
+
 /** 点击打开页面地址(请使用openModel,点击事件代理方法请对应使用xhLaunchAd:clickAndOpenModel:clickPoint:) */
 @property(nonatomic,copy)NSString *openURLString XHLaunchAdDeprecated("请使用openModel,点击事件代理方法请对应使用xhLaunchAd:clickAndOpenModel:clickPoint:");
 
