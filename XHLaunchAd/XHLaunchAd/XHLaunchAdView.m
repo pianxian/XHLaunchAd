@@ -12,7 +12,7 @@
 
 static NSString *const VideoPlayStatus = @"status";
 
-@interface XHLaunchAdImageView ()
+@interface XHLaunchAdImageView ()<maskVideoPlayDelegate>
 
 @end
 
@@ -55,7 +55,8 @@ static NSString *const VideoPlayStatus = @"status";
         self.userInteractionEnabled = YES;
         self.backgroundColor = [UIColor clearColor];
         self.frame = [UIScreen mainScreen].bounds;
-        [self addSubview:self.videoPlayer.view];
+//        [self addSubview:self.videoPlayer.view];
+        [self.layer addSublayer:self.videoPlayer];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
         tapGesture.delegate = self;
         [self addGestureRecognizer:tapGesture];
@@ -75,8 +76,8 @@ static NSString *const VideoPlayStatus = @"status";
 #pragma mark - Action
 -(void)stopVideoPlayer{
     if(_videoPlayer==nil) return;
-    [_videoPlayer.player pause];
-    [_videoPlayer.view removeFromSuperview];
+    [_videoPlayer pause];
+//    [_videoPlayer.view removeFromSuperview];
     _videoPlayer = nil;
     
     /** 释放音频焦点 */
@@ -102,13 +103,15 @@ static NSString *const VideoPlayStatus = @"status";
 }
 
 #pragma mark - lazy
--(AVPlayerViewController *)videoPlayer{
+-(SLMaskVideoPlayerLayer *)videoPlayer{
     if(_videoPlayer==nil){
-        _videoPlayer = [[AVPlayerViewController alloc] init];
-        _videoPlayer.showsPlaybackControls = NO;
+        _videoPlayer = [SLMaskVideoPlayerLayer layer];
+//        _videoPlayer.showsPlaybackControls = NO;
         _videoPlayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        _videoPlayer.view.frame = [UIScreen mainScreen].bounds;
-        _videoPlayer.view.backgroundColor = [UIColor clearColor];
+//        _videoPlayer.view.frame = [UIScreen mainScreen].bounds;
+//        _videoPlayer.view.backgroundColor = [UIColor clearColor];
+        _videoPlayer.repeatCount = 1;
+        _videoPlayer.playDelegate = self;
         //注册通知控制是否循环播放
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runLoopTheMovie:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
         
@@ -122,16 +125,18 @@ static NSString *const VideoPlayStatus = @"status";
 #pragma mark - set
 -(void)setFrame:(CGRect)frame{
     [super setFrame:frame];
-    _videoPlayer.view.frame = self.frame;
+    _videoPlayer.frame = self.frame;
 }
 
 - (void)setContentURL:(NSURL *)contentURL {
     _contentURL = contentURL;
-    AVAsset *movieAsset = [AVURLAsset URLAssetWithURL:contentURL options:nil];
-    self.playerItem = [AVPlayerItem playerItemWithAsset:movieAsset];
-    _videoPlayer.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-    // 监听播放失败状态
-    [self.playerItem addObserver:self forKeyPath:VideoPlayStatus options:NSKeyValueObservingOptionNew context:nil];
+    _videoPlayer.videoURL = contentURL;
+    [_videoPlayer play];
+//    AVAsset *movieAsset = [AVURLAsset URLAssetWithURL:contentURL options:nil];
+//    self.playerItem = [AVPlayerItem playerItemWithAsset:movieAsset];
+//    _videoPlayer.player = [AVPlayer playerWithPlayerItem:self.playerItem];
+//    // 监听播放失败状态
+//    [self.playerItem addObserver:self forKeyPath:VideoPlayStatus options:NSKeyValueObservingOptionNew context:nil];
 }
 -(void)setVideoGravity:(AVLayerVideoGravity)videoGravity{
     _videoGravity = videoGravity;
@@ -164,6 +169,10 @@ static NSString *const VideoPlayStatus = @"status";
             break;
     }
 }
-
+-(void)maskVideoDidPlayFinish:(SLMaskVideoPlayerLayer *)playerLayer{
+#if DEBUG
+    NSLog(@"播放完成");
+#endif
+}
 @end
 

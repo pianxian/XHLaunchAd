@@ -17,6 +17,13 @@
     #import "FLAnimatedImage.h"
 #endif
 
+
+#if __has_include(<alphaVideoPlayTool/SLMaskVideoPlayerLayer.h>)
+    #import<alphaVideoPlayTool/SLMaskVideoPlayerLayer.h>
+#else
+    #import "SLMaskVideoPlayerLayer.h"
+#endif
+
 #if __has_include(<FLAnimatedImage/FLAnimatedImageView.h>)
     #import <FLAnimatedImage/FLAnimatedImageView.h>
 #else
@@ -35,7 +42,9 @@
 @interface XHLaunchAdVideoView : UIView
 
 @property (nonatomic, copy) void(^click)(CGPoint point);
-@property (nonatomic, strong) AVPlayerViewController *videoPlayer;
+
+
+@property (nonatomic, strong) SLMaskVideoPlayerLayer *videoPlayer;
 @property (nonatomic, assign) MPMovieScalingMode videoScalingMode;
 @property (nonatomic, assign) AVLayerVideoGravity videoGravity;
 @property (nonatomic, assign) BOOL videoCycleOnce;
