@@ -24,6 +24,7 @@ static NSString *const VideoPlayStatus = @"status";
         self.userInteractionEnabled = YES;
         self.frame = [UIScreen mainScreen].bounds;
         self.layer.masksToBounds = YES;
+        self.backgroundColor = UIColor.clearColor;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
         [self addGestureRecognizer:tapGesture];
     }
@@ -53,7 +54,7 @@ static NSString *const VideoPlayStatus = @"status";
     self = [super init];
     if (self) {
         self.userInteractionEnabled = YES;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor blackColor];
         self.frame = [UIScreen mainScreen].bounds;
 //        [self addSubview:self.videoPlayer.view];
         [self.layer addSublayer:self.videoPlayer];
@@ -87,8 +88,9 @@ static NSString *const VideoPlayStatus = @"status";
 - (void)runLoopTheMovie:(NSNotification *)notification{
     //需要循环播放
     if(!_videoCycleOnce){
-        [(AVPlayerItem *)[notification object] seekToTime:kCMTimeZero];
-        [_videoPlayer.player play];//重播
+//        [(AVPlayerItem *)[notification object] seekToTime:kCMTimeZero];
+//        [_videoPlayer.player play];//重播
+        [_videoPlayer play];
     }
 }
 
@@ -110,10 +112,10 @@ static NSString *const VideoPlayStatus = @"status";
         _videoPlayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 //        _videoPlayer.view.frame = [UIScreen mainScreen].bounds;
 //        _videoPlayer.view.backgroundColor = [UIColor clearColor];
-        _videoPlayer.repeatCount = 1;
+        _videoPlayer.repeatCount = _videoCycleOnce ? -1:1;
         _videoPlayer.playDelegate = self;
         //注册通知控制是否循环播放
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runLoopTheMovie:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runLoopTheMovie:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
         
         /** 获取音频焦点 */
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
