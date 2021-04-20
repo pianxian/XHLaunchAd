@@ -1,0 +1,22 @@
+
+platform :ios, "11.0"
+
+
+targetsPodArrays = ['XHLaunchAdExample']
+
+inhibit_all_warnings!
+
+warn_for_unused_master_specs_repo = false
+
+
+
+targetsPodArrays.each do |t|
+
+    target t do
+
+  
+    pod 'XHLaunchAd',:git =>'https://github.com/pianxian/XHLaunchAd.git'
+ 
+
+ end
+end

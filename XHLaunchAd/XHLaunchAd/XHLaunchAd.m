@@ -280,9 +280,21 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
                 }
             }
         }
-    }else{
+    }else {
+        
+//#define XHDataWithFileName(name)\
+//({\
+//NSData *data = nil;\
+//NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:nil];\
+//if([[NSFileManager defaultManager] fileExistsAtPath:path]){\
+//    data = [NSData dataWithContentsOfFile:path];\
+//}\
+//(data);\
+//})
+        
         if(configuration.imageNameOrURLString.length){
-            NSData *data = XHDataWithFileName(configuration.imageNameOrURLString);
+            NSData *data = [NSData dataWithContentsOfFile:configuration.imageNameOrURLString];
+            //XHDataWithFileName(configuration.imageNameOrURLString);
             if(XHISGIFTypeWithData(data)){
                 FLAnimatedImage *image = [FLAnimatedImage animatedImageWithGIFData:data];
                 adImageView.animatedImage = image;
@@ -387,19 +399,20 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
         }
     }else{
         if(configuration.videoNameOrURLString.length){
-            NSURL *pathURL = nil;
-            NSURL *cachePathURL = [[NSURL alloc] initFileURLWithPath:[XHLaunchAdCache videoPathWithFileName:configuration.videoNameOrURLString]];
-            //若本地视频未在沙盒缓存文件夹中
-            if (![XHLaunchAdCache checkVideoInCacheWithFileName:configuration.videoNameOrURLString]) {
-                /***如果不在沙盒文件夹中则将其复制一份到沙盒缓存文件夹中/下次直接取缓存文件夹文件,加快文件查找速度 */
-                NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:configuration.videoNameOrURLString withExtension:nil];
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [[NSFileManager defaultManager] copyItemAtURL:bundleURL toURL:cachePathURL error:nil];
-                });
-                pathURL = bundleURL;
-            }else{
-                pathURL = cachePathURL;
-            }
+            NSURL *pathURL = [NSURL fileURLWithPath:configuration.videoNameOrURLString];
+            NSURL *cachePathURL = [NSURL fileURLWithPath:configuration.videoNameOrURLString];
+            //[[NSURL alloc] initFileURLWithPath:[XHLaunchAdCache videoPathWithFileName:configuration.videoNameOrURLString]];
+//            //若本地视频未在沙盒缓存文件夹中
+//            if (![XHLaunchAdCache checkVideoInCacheWithFileName:configuration.videoNameOrURLString]) {
+//                /***如果不在沙盒文件夹中则将其复制一份到沙盒缓存文件夹中/下次直接取缓存文件夹文件,加快文件查找速度 */
+//                NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:configuration.videoNameOrURLString withExtension:nil];
+//                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                    [[NSFileManager defaultManager] copyItemAtURL:bundleURL toURL:cachePathURL error:nil];
+//                });
+//                pathURL = bundleURL;
+//            }else{
+//                pathURL = cachePathURL;
+//            }
             
             if(pathURL){
                 if ([self.delegate respondsToSelector:@selector(xhLaunchAd:videoDownLoadFinish:)]) {
