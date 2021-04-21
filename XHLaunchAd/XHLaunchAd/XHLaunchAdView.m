@@ -9,21 +9,34 @@
 #import "XHLaunchAdView.h"
 #import "XHLaunchAdConst.h"
 #import "XHLaunchImageView.h"
-
+#import "XHLaunchAdConfiguration.h"
 static NSString *const VideoPlayStatus = @"status";
 
-@interface XHLaunchAdImageView ()<maskVideoPlayDelegate>
+@interface XHLaunchAdImageView ()
 
+
+/// 底部展示View
+@property (nonatomic,strong) UIView *bottomAdView;
 @end
 
 @implementation XHLaunchAdImageView
 
+-(FLAnimatedImageView *)adImageContainView{
+    if (!_adImageContainView) {
+        _adImageContainView = [FLAnimatedImageView new];
+    }
+    return _adImageContainView;
+}
 - (id)init{
     self = [super init];
     if (self) {
         self.userInteractionEnabled = YES;
         self.frame = [UIScreen mainScreen].bounds;
         self.layer.masksToBounds = YES;
+        [self addSubview:self.adImageContainView];
+        [_adImageContainView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
         self.backgroundColor = UIColor.clearColor;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
         [self addGestureRecognizer:tapGesture];
@@ -35,18 +48,36 @@ static NSString *const VideoPlayStatus = @"status";
     CGPoint point = [gestureRecognizer locationInView:self];
     if(self.click) self.click(point);
 }
+/// 底部展示View
+/// @param bottomAdView bottomAdView description
 
+-(void)insertBottomAdView:(UIView *)bottomAdView{
+    [self addSubview:bottomAdView];
+    [self.adImageContainView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.trailing.top.equalTo(@0);
+        make.bottom.equalTo(bottomAdView.mas_top);
+    }];
+    [bottomAdView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.leading.trailing.equalTo(@0);
+        make.width.equalTo(bottomAdView.mas_height).multipliedBy(375.f/106.f);
+    }];
+}
 @end
 
 #pragma mark - videoAdView
-@interface XHLaunchAdVideoView ()<UIGestureRecognizerDelegate>
-@property (nonatomic, strong) AVPlayerItem *playerItem;
+@interface XHLaunchAdVideoView ()<UIGestureRecognizerDelegate,maskVideoPlayDelegate>
+
+/// 视频容器View
+@property (nonatomic,strong) UIView *videoContainView;
+
+/// 底部展示View
+@property (nonatomic,strong) UIView *bottomAdView;
+
 @end
 
 @implementation XHLaunchAdVideoView
 
 -(void)dealloc{
-    [self.playerItem removeObserver:self forKeyPath:VideoPlayStatus];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -57,7 +88,11 @@ static NSString *const VideoPlayStatus = @"status";
         self.backgroundColor = [UIColor blackColor];
         self.frame = [UIScreen mainScreen].bounds;
 //        [self addSubview:self.videoPlayer.view];
-        [self.layer addSublayer:self.videoPlayer];
+        [self addSubview:self.videoContainView];
+        [_videoContainView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+        [self.videoContainView.layer addSublayer:self.videoPlayer];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
         tapGesture.delegate = self;
         [self addGestureRecognizer:tapGesture];
@@ -124,6 +159,23 @@ static NSString *const VideoPlayStatus = @"status";
     return _videoPlayer;
 }
 
+/// 底部展示View
+-(UIView *)bottomAdView{
+    if (!_bottomAdView) {
+        _bottomAdView = [UIView new];
+        _bottomAdView.backgroundColor = UIColor.clearColor;
+    }
+    return _bottomAdView;
+}
+
+/// 视频容器View
+-(UIView *)videoContainView{
+    if (!_videoContainView) {
+        _videoContainView = [UIView new];
+        _videoContainView.backgroundColor = UIColor.clearColor;
+    }
+    return _videoContainView;
+}
 #pragma mark - set
 -(void)setFrame:(CGRect)frame{
     [super setFrame:frame];
@@ -175,6 +227,21 @@ static NSString *const VideoPlayStatus = @"status";
 #if DEBUG
     NSLog(@"播放完成");
 #endif
+}
+
+/// 底部展示View
+/// @param bottomAdView bottomAdView description
+
+-(void)insertBottomAdView:(UIView *)bottomAdView{
+    [self addSubview:bottomAdView];
+    [self.videoContainView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.trailing.top.equalTo(@0);
+        make.bottom.equalTo(bottomAdView.mas_top);
+    }];
+    [bottomAdView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.leading.trailing.equalTo(@0);
+        make.width.equalTo(bottomAdView.mas_height).multipliedBy(375.f/106.f);
+    }];
 }
 @end
 

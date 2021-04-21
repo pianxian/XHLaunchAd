@@ -29,12 +29,22 @@
 #else
     #import "FLAnimatedImageView.h"
 #endif
-
+#if __has_include(<Masonry/Masonry.h>)
+    #import <Masonry/Masonry.h>
+#else
+    #import "Masonry.h"
+#endif
 
 #pragma mark - image
-@interface XHLaunchAdImageView : FLAnimatedImageView
+@interface XHLaunchAdImageView : UIView
 
 @property (nonatomic, copy) void(^click)(CGPoint point);
+// 图片容器View
+@property (nonatomic,strong) FLAnimatedImageView *adImageContainView;
+/// 底部展示View
+/// @param bottomAdView bottomAdView description
+
+-(void)insertBottomAdView:(UIView *)bottomAdView;
 
 @end
 
@@ -52,6 +62,12 @@
 @property (nonatomic, strong) NSURL *contentURL;
 
 -(void)stopVideoPlayer;
+
+/// 底部展示View
+/// @param bottomAdView bottomAdView description
+
+-(void)insertBottomAdView:(UIView *)bottomAdView;
+
 
 @end
 

@@ -61,6 +61,9 @@ typedef NS_ENUM(NSInteger , ShowFinishAnimate) {
 @property (nonatomic,assign) NSTimeInterval showEnterForegroundTime;
 
 
+/// 底部展示View
+@property (nullable,nonatomic,weak) UIView *bottomAdView;
+
 
 /** 点击打开页面地址(请使用openModel,点击事件代理方法请对应使用xhLaunchAd:clickAndOpenModel:clickPoint:) */
 @property(nonatomic,copy)NSString *openURLString XHLaunchAdDeprecated("请使用openModel,点击事件代理方法请对应使用xhLaunchAd:clickAndOpenModel:clickPoint:");
@@ -78,6 +81,10 @@ typedef NS_ENUM(NSInteger , ShowFinishAnimate) {
 
 #pragma mark - 图片广告相关
 @interface XHLaunchImageAdConfiguration : XHLaunchAdConfiguration
+
+
+/// 底部展示View
+@property (nullable,nonatomic,weak) UIView *bottomAdView;
 
 /** image本地图片名(jpg/gif图片请带上扩展名)或网络图片URL string */
 @property(nonatomic,copy)NSString *imageNameOrURLString;

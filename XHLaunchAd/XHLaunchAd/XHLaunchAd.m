@@ -244,6 +244,9 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
     [self removeSubViewsExceptLaunchAdImageView];
     XHLaunchAdImageView *adImageView = [[XHLaunchAdImageView alloc] init];
     [_window addSubview:adImageView];
+    if (configuration.bottomAdView) {
+        [adImageView insertBottomAdView:configuration.bottomAdView];
+    }
     /** frame */
     if(configuration.frame.size.width>0 && configuration.frame.size.height>0) adImageView.frame = configuration.frame;
     if(configuration.contentMode) adImageView.contentMode = configuration.contentMode;
@@ -297,10 +300,10 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
             //XHDataWithFileName(configuration.imageNameOrURLString);
             if(XHISGIFTypeWithData(data)){
                 FLAnimatedImage *image = [FLAnimatedImage animatedImageWithGIFData:data];
-                adImageView.animatedImage = image;
-                adImageView.image = nil;
-                __weak typeof(adImageView) w_adImageView = adImageView;
-                adImageView.loopCompletionBlock = ^(NSUInteger loopCountRemaining) {
+                adImageView.adImageContainView.animatedImage = image;
+                adImageView.adImageContainView.image = nil;
+                __weak typeof(adImageView.adImageContainView) w_adImageView = adImageView;
+                adImageView.adImageContainView.loopCompletionBlock = ^(NSUInteger loopCountRemaining) {
                     if(configuration.GIFImageCycleOnce){
                         [w_adImageView stopAnimating];
                         XHLaunchAdLog(@"GIF不循环,播放完成");
@@ -308,8 +311,8 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
                     }
                 };
             }else{
-                adImageView.animatedImage = nil;
-                adImageView.image = [UIImage imageWithData:data];
+                adImageView.adImageContainView.animatedImage = nil;
+                adImageView.adImageContainView.image = [UIImage imageWithData:data];
             }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored"-Wdeprecated-declarations"
@@ -356,6 +359,9 @@ static  SourceType _sourceType = SourceTypeLaunchImage;
         _adVideoView = [[XHLaunchAdVideoView alloc] init];
     }
     [_window addSubview:_adVideoView];
+    if (configuration.bottomAdView) {
+        [_adVideoView insertBottomAdView:configuration.bottomAdView];
+    }
     /** frame */
     if(configuration.frame.size.width>0&&configuration.frame.size.height>0) _adVideoView.frame = configuration.frame;
 #pragma clang diagnostic push

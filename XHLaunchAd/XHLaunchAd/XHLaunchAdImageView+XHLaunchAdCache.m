@@ -42,24 +42,24 @@
 }
 
 - (void)xh_setImageWithURL:(nonnull NSURL *)url placeholderImage:(nullable UIImage *)placeholder GIFImageCycleOnce:(BOOL)GIFImageCycleOnce options:(XHLaunchAdImageOptions)options GIFImageCycleOnceFinish:(void(^_Nullable)(void))cycleOnceFinishBlock completed:(nullable XHExternalCompletionBlock)completedBlock {
-    if(placeholder) self.image = placeholder;
+    if(placeholder) self.adImageContainView.image = placeholder;
     if(!url) return;
     XHWeakSelf
     [[XHLaunchAdImageManager sharedManager] loadImageWithURL:url options:options progress:nil completed:^(UIImage * _Nullable image,  NSData *_Nullable imageData, NSError * _Nullable error, NSURL * _Nullable imageURL) {
         if(!error){
             if(XHISGIFTypeWithData(imageData)){
-                weakSelf.image = nil;
-                weakSelf.animatedImage = [FLAnimatedImage animatedImageWithGIFData:imageData];
-                weakSelf.loopCompletionBlock = ^(NSUInteger loopCountRemaining) {
+                weakSelf.adImageContainView.image = nil;
+                weakSelf.adImageContainView.animatedImage = [FLAnimatedImage animatedImageWithGIFData:imageData];
+                weakSelf.adImageContainView.loopCompletionBlock = ^(NSUInteger loopCountRemaining) {
                     if(GIFImageCycleOnce){
-                       [weakSelf stopAnimating];
+                       [weakSelf.adImageContainView stopAnimating];
                         XHLaunchAdLog(@"GIF不循环,播放完成");
                         if(cycleOnceFinishBlock) cycleOnceFinishBlock();
                     }
                 };
             }else{
-                weakSelf.image = image;
-                weakSelf.animatedImage = nil;
+                weakSelf.adImageContainView.image = image;
+                weakSelf.adImageContainView.animatedImage = nil;
             }
         }
         if(completedBlock) completedBlock(image,imageData,error,imageURL);
