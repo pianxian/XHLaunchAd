@@ -15,8 +15,6 @@ static NSString *const VideoPlayStatus = @"status";
 @interface XHLaunchAdImageView ()
 
 
-/// 底部展示View
-@property (nonatomic,strong) UIView *bottomAdView;
 @end
 
 @implementation XHLaunchAdImageView
@@ -70,8 +68,6 @@ static NSString *const VideoPlayStatus = @"status";
 /// 视频容器View
 @property (nonatomic,strong) UIView *videoContainView;
 
-/// 底部展示View
-@property (nonatomic,strong) UIView *bottomAdView;
 
 @end
 
@@ -85,7 +81,7 @@ static NSString *const VideoPlayStatus = @"status";
     self = [super init];
     if (self) {
         self.userInteractionEnabled = YES;
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor whiteColor];
         self.frame = [UIScreen mainScreen].bounds;
 //        [self addSubview:self.videoPlayer.view];
         [self addSubview:self.videoContainView];
@@ -159,14 +155,7 @@ static NSString *const VideoPlayStatus = @"status";
     return _videoPlayer;
 }
 
-/// 底部展示View
--(UIView *)bottomAdView{
-    if (!_bottomAdView) {
-        _bottomAdView = [UIView new];
-        _bottomAdView.backgroundColor = UIColor.clearColor;
-    }
-    return _bottomAdView;
-}
+
 
 /// 视频容器View
 -(UIView *)videoContainView{
@@ -179,7 +168,7 @@ static NSString *const VideoPlayStatus = @"status";
 #pragma mark - set
 -(void)setFrame:(CGRect)frame{
     [super setFrame:frame];
-    _videoPlayer.frame = self.frame;
+    _videoPlayer.frame = self.videoContainView.frame;
 }
 
 - (void)setContentURL:(NSURL *)contentURL {

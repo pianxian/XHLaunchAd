@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger , ShowFinishAnimate) {
 
 
 /// 底部展示View
-@property (nullable,nonatomic,weak) UIView *bottomAdView;
+@property (nullable,nonatomic,strong) UIView *bottomAdView;
 
 
 /** 点击打开页面地址(请使用openModel,点击事件代理方法请对应使用xhLaunchAd:clickAndOpenModel:clickPoint:) */
@@ -84,7 +84,7 @@ typedef NS_ENUM(NSInteger , ShowFinishAnimate) {
 
 
 /// 底部展示View
-@property (nullable,nonatomic,weak) UIView *bottomAdView;
+@property (nullable,nonatomic,strong) UIView *bottomAdView;
 
 /** image本地图片名(jpg/gif图片请带上扩展名)或网络图片URL string */
 @property(nonatomic,copy)NSString *imageNameOrURLString;
