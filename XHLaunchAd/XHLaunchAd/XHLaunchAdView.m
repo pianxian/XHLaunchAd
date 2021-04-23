@@ -22,6 +22,8 @@ static NSString *const VideoPlayStatus = @"status";
 -(FLAnimatedImageView *)adImageContainView{
     if (!_adImageContainView) {
         _adImageContainView = [FLAnimatedImageView new];
+        _adImageContainView.contentMode = UIViewContentModeScaleAspectFill;
+
     }
     return _adImageContainView;
 }
