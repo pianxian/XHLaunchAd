@@ -71,7 +71,7 @@
 
 -(UIImage*)imageFromView:(UIView*)view{
     //fix bug:https://github.com/CoderZhuXH/XHLaunchAd/issues/203
-    if (CGRectIsEmpty(view.frame)) {
+    if (CGRectIsEmpty(view.frame)||[view isKindOfClass:UITableView.class]) {
         return nil;
     }
     CGSize size = view.bounds.size;
